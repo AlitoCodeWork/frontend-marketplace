@@ -14,9 +14,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
   ],
-  nitro: {
-    preset: 'netlify'
-  },
+
 
   vite: {
     server: {

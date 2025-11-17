@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@types/node": "^24.10.1",
     "nuxt-icon": "^0.6.10"
   }
 }
