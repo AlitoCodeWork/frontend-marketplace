@@ -1,4 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
 
@@ -13,10 +13,8 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxtjs/tailwindcss',
-    'nuxt-icon',
   ],
 
-  
   vite: {
     server: {
       fs: {
@@ -26,9 +24,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-  public: {
-    apiBase: 'http://localhost:4000' 
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:4000' 
+    }
   }
-}
 
 });
