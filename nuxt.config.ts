@@ -15,6 +15,20 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
   ],
 
+  nitro: {
+    prerender: {
+      failOnError: false,
+      ignore: [
+        '/prueba',
+        '/PruebaButton', 
+        '/pruebaSelect',
+        '/pruebaTags',
+        '/pruebaFooter',
+        '/pruebaNavbar',
+        '/login'
+      ]
+    }
+  },
 
   vite: {
     server: {

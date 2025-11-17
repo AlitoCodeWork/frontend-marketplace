@@ -67,11 +67,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
 import RecoverPasswordModal from './RecoverPassword.vue';
 
-// Definición de eventos
 const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'login-success', payload: { token: string; user: any }): void;
@@ -79,45 +76,39 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
+const config = useRuntimeConfig();
+const { $axios } = useNuxtApp() as any; // Casting temporal
+
 const email = ref('');
 const password = ref('');
 const showForgot = ref(false);
-
-// Creamos instancia axios apuntando al backend en el puerto 4000
-const api = axios.create({
-  baseURL: 'http://localhost:4000',
-  headers: { 'Content-Type': 'application/json' },
-});
 
 function emitClose() {
   emit('close');
 }
 
-// Intentar login: primero como admin, si 401 probar vendedor
 async function handleSubmit() {
   try {
-    // 1) Intento Admin
-    const adminResp = await api.post('/admin/login', {
+    const adminResp = await $axios.post('/admin/login', {
       correo: email.value,
       password: password.value,
     });
     const admin = adminResp.data.admin;
     onLoginSuccess(adminResp.data.token, {
       ...admin,
-      isAdmin: !!admin.is_admin,});
+      isAdmin: !!admin.is_admin,
+    });
     return;
   } catch (err: any) {
     if (err.response?.status !== 401) {
-      // Error diferente a credenciales -> muestro
       console.error('Error login admin:', err);
       alert(err.response?.data?.mensaje || 'Error en el login');
       return;
     }
-    // 2) Si admin devolvió 401, pruebo vendedor
   }
 
   try {
-    const vendResp = await api.post('/vendedor/login', {
+    const vendResp = await $axios.post('/vendedor/login', {
       correo: email.value,
       password: password.value,
     });
@@ -133,18 +124,15 @@ async function handleSubmit() {
 }
 
 function onLoginSuccess(token: string, user: any) {
-  // Guardamos token
-  localStorage.setItem('token', token);
-  // Emitimos al padre
+  if (process.client) {
+    localStorage.setItem('token', token);
+  }
   emit('login-success', { token, user });
-  // Cerramos modal
   emit('close');
-  // Redirigimos
   const isAdmin = !!user.isAdmin;
   router.push(isAdmin ? '/DashboardPublicaciones' : '/DashboardPublicaciones');
 }
 
-// Cuando RecoverPasswordModal emite 'recovered'
 function onRecovered() {
   showForgot.value = false;
   emit('recovered');
