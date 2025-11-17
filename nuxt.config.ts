@@ -1,0 +1,34 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2025-05-15',
+
+  css: ['font-awesome/css/font-awesome.css'],
+
+  plugins: [
+    { src: '~/plugins/fontawesome.js', mode: 'client' },
+    '~/plugins/axios.js',
+  ],
+
+  devtools: { enabled: true },
+
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-icon',
+  ],
+
+  
+  vite: {
+    server: {
+      fs: {
+        strict: false
+      }
+    }
+  },
+
+  runtimeConfig: {
+  public: {
+    apiBase: 'http://localhost:4000' 
+  }
+}
+
+});
