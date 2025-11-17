@@ -1,15 +1,33 @@
-// plugins/axios.js
-import axios from 'axios'
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2025-05-15',
 
-export default defineNuxtPlugin(nuxtApp => {
-  const config = useRuntimeConfig()
+  css: ['font-awesome/css/font-awesome.css'],
 
-  const axiosInstance = axios.create({
-    baseURL: config.public.apiBase, // <-- nombre correcto
-    headers: {
-      'Content-Type': 'application/json',
+  plugins: [
+    { src: '~/plugins/fontawesome.js', mode: 'client' },
+    '~/plugins/axios.js',
+  ],
+
+  devtools: { enabled: true },
+
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-icon',
+  ],
+
+  vite: {
+    server: {
+      fs: {
+        strict: false
+      }
     }
-  })
+  },
 
-  nuxtApp.provide('axios', axiosInstance)
-})
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:4000' 
+    }
+  }
+
+});
